@@ -12,7 +12,7 @@ with open("report.txt", "r", encoding="utf-8", errors="ignore") as file:
 
 conversation= []
 
-prompt = """
+prompt = f"""
     You are a Cybersecurity SOC analyst.
 
     Read the following Bandit security report and return ONLY valid JSON.
@@ -22,18 +22,18 @@ prompt = """
 
     Structure must be:
 
-    {
-    "critical": [
-        {
-        "issue": "",
-        "meaning": "",
-        "risk": "",
-        "fix": ""
-        }
-    ],
-    "medium": [],
-    "low": []
-    }
+    {{
+        "critical": [
+            {{
+            "issue": "",
+            "meaning": "",
+            "risk": "",
+            "fix": ""
+            }}
+        ],
+        "medium": [],
+        "low": []
+    }}
 
     Rules:
     - Group all issues correctly
@@ -41,8 +41,8 @@ prompt = """
     - If no issues exist in a category, return an empty list
 
     Here is the report:
-    
-""".format(report)
+    {report}
+"""
 
 conversation.append({
     "role":"user",
@@ -56,7 +56,7 @@ request = client.chat.completions.create(
 
 ai_response = request.choices[0].message.content
 
-ai_response = ai_response.replace("```json", "").replace("```", "")  #removing any markdown and extra text from ai reponse before parsing to json
+ai_response = ai_response.replace("```json", "").replace("```", "").strip()  #removing any markdown and extra text from ai reponse before parsing to json
 
 parsed = json.loads(ai_response)
 
@@ -65,4 +65,4 @@ conversation.append({
     "content":parsed
 })
 
-print(parsed)
+print(json.dumps(parsed, indent=2))
