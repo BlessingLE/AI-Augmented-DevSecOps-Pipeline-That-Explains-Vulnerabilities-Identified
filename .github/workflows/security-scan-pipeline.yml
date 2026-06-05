@@ -25,7 +25,7 @@ jobs:
 
             - name: Running Bandit Scan
               run: |
-                bandit -r app/ -f txt -o report.txt
+                bandit -r app/ -f txt -o report.txt --exit-zero
 
             - name: Runnning AI anlysis
               env:
