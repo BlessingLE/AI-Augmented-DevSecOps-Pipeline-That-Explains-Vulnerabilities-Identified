@@ -8,13 +8,11 @@ load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 with open("report.txt", "r", encoding="utf-8", errors="ignore") as file:
-    report = json.load(file)
-
-report_txt = json.dumps(report, indent=2)
+    report = file.read()
 
 conversation= []
 
-prompt = f"""
+prompt = """
     You are a Cybersecurity SOC analyst.
 
     Read the following Bandit security report and return ONLY valid JSON.
@@ -43,8 +41,8 @@ prompt = f"""
     - If no issues exist in a category, return an empty list
 
     Here is the report:
-    {report_txt}
-"""
+    
+""".format(report)
 
 conversation.append({
     "role":"user",
