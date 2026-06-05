@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 import os
+import json
 from openai import OpenAI
 
 load_dotenv()
@@ -12,16 +13,36 @@ with open("report.txt", "r", encoding="utf-16") as file:
 conversation= []
 
 prompt = f"""
-    You are a Cybersecurity SOC analyst. Read and explain the following Bandit security report in simple terms for a software developer to understand the security issues. 
-    Group the issues into: Critical / Medium /  Low. 
+    You are a Cybersecurity SOC analyst.
 
-    Also explain the following for each issue:
-    1. What the issue meas
-    2. Why the issue is dangerous
-    3. How the issue can be fixed
+    Read the following Bandit security report and return ONLY valid JSON.
 
-    Here is the report: {report}
-    """
+    Do NOT include explanations outside JSON.
+    Do NOT use markdown.
+
+    Structure must be:
+
+    {
+    "critical": [
+        {
+        "issue": "",
+        "meaning": "",
+        "risk": "",
+        "fix": ""
+        }
+    ],
+    "medium": [],
+    "low": []
+    }
+
+    Rules:
+    - Group all issues correctly
+    - Keep explanations simple and developer-friendly
+    - If no issues exist in a category, return an empty list
+
+    Here is the report:
+    {report}
+"""
 
 conversation.append({
     "role":"user",
@@ -35,9 +56,13 @@ request = client.chat.completions.create(
 
 ai_response = request.choices[0].message.content
 
+ai_response = ai_response.replace("```json", "").replace("```", "")  #removing any markdown and extra text from ai reponse before parsing to json
+
+parsed = json.loads(ai_response)
+
 conversation.append({
     "role":"assistant",
-    "content":ai_response
+    "content":parsed
 })
 
-print(ai_response)
+print(parsed)
