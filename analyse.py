@@ -8,7 +8,9 @@ load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 with open("report.txt", "r", encoding="utf-8", errors="ignore") as file:
-    report = file.read()
+    report = json.load(file)
+
+report_txt = json.dumps(report, indent=2)
 
 conversation= []
 
@@ -41,7 +43,7 @@ prompt = f"""
     - If no issues exist in a category, return an empty list
 
     Here is the report:
-    {report}
+    {report_txt}
 """
 
 conversation.append({
