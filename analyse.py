@@ -7,7 +7,7 @@ load_dotenv()
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-with open("report.txt", "r", encoding="utf-16", errors="ignore") as file:
+with open("report.txt", "r", encoding="utf-8", errors="ignore") as file:
     report = file.read()
 
 conversation= []
