@@ -3,3 +3,13 @@ This is a pipeline that doesn't just build and test code. It also uses AI to:
   1. Scan code for vulnerabilities
   2. Explain scan results is simple terms, categorising vulnerabilities as Low /  Medium / High
   3. Suggesting auto fixes for vulnerabilities
+
+<h4>Tech Stack</h4>
+  Python
+  Bandit
+  OpenAI API
+  Github Actions
+
+Operational flow:
+  Push Code -> CI runs -> Bandit scans application -> AI explains vulnerabilities -> AI suggests solutions
+
